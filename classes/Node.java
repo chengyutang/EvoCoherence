@@ -1,11 +1,14 @@
 import java.util.HashMap;
+import java.lang.Math.*;
 
 public class Node {
 	
 	private String tag;
 	private String name;
 	private double activation = 0;
+	private double newActivation = 0;
 	private HashMap<Node, Double> neighbors;
+	private boolean settled = false;
 
 	// Constructor, called when the activation value is not given.
 	public Node(String tag, String name) {
@@ -39,6 +42,10 @@ public class Node {
 		return this.neighbors;
 	}
 
+	public boolean settled() {
+		return this.settled;
+	}
+
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
@@ -67,4 +74,32 @@ public class Node {
 		}
 	}
 
+	public double getNetInput() {
+		double netInput = 0;
+		for (Node neighbor: this.neighbors.keySet()) {
+			netInput += neighbor.getActivation() * this.neighbors.get(neighbor);
+		}
+		return netInput;
+	}
+
+	public void computeNewActivation() {
+		double netInput = getNetInput();
+		Parameters parameters = new Parameters();
+		if (netInput > 0) {
+			this.newActivation = this.activation * (1 - parameters.decay) + netInput * (parameters.maximum - this.activation);
+		} else {
+			this.newActivation = this.activation * (1 - parameters.decay) + netInput * (this.activation - parameters.minimum);
+		}
+
+		this.newActivation = Math.max(this.newActivation, parameters.minimum);
+		this.newActivation = Math.min(this.newActivation, parameters.maximum);
+
+		if (Math.abs(this.newActivation - this.activation) < parameters.threshold) {
+			this.settled = true;
+		}
+	}
+
+	public void updateActivation() {
+		this.activation = this.newActivation;
+	}
 }

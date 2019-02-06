@@ -1,11 +1,12 @@
 import java.util.*;
+import java.io.*;
 
 public class CoherenceNetwork {
 
 	private Set<Node> visited = new HashSet<Node>();
 	// Create Belief/evidence nodes
-	public Node b1  = new Node("B1",  "The available data are unclear about whether evolution actually occurs.");
-	public Node b2  = new Node("B2",  "Most scientists accept evolutionary theory to be scientifically valid.");
+	public Node b1  = new Node("B1",  "The available data are unclear about whether evolution actually occurs.", 0.2);
+	public Node b2  = new Node("B2",  "Most scientists accept evolutionary theory to be scientifically valid.", 0.8);
 	public Node b3  = new Node("B3",  "Organisms existing today are the result of evolutionary processes that have occurred over millions of years.");
 	public Node b4  = new Node("B4",  "The age of the earth is less than 20,000 yesrs.");
 	public Node b5  = new Node("B5",  "Human being on earth today are the result of evolutionary processes that have occurred over millions of years.");
@@ -20,12 +21,13 @@ public class CoherenceNetwork {
 	public Node b14 = new Node("B14", "I consider myself a religious person.");
 	public Node b15 = new Node("B15", "I consider myself a spiritual person.");
 	public Node b16 = new Node("B16", "I'm a biology major.");
+	public List<Node> nodes = new ArrayList<Node>(Arrays.asList(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16));
 
 	// Default constructor
 	public CoherenceNetwork() {
 		
 		// establish the connections
-		this.b1.addNeighbor(this.b2, 0);
+		this.b1.addNeighbor(this.b2, 0.4);
 		this.b1.addNeighbor(this.b3, 0);
 		this.b1.addNeighbor(this.b5, 0);
 		this.b1.addNeighbor(this.b7, 0);
@@ -58,6 +60,36 @@ public class CoherenceNetwork {
 			if (!this.visited.contains(neighbor)) {
 				traversal(neighbor);
 			}
+		}
+	}
+
+	public void runner() {
+		int cnt = 0;
+		while (!settled()) {
+			System.out.printf("Iter %d\n", cnt);
+			for (Node node: this.nodes) {
+				node.computeNewActivation();
+			}
+
+			for (Node node: this.nodes) {
+				node.updateActivation();
+			}
+			cnt += 1;
+		}
+	}
+
+	public boolean settled() {
+		for (Node node: this.nodes) {
+			if (!node.settled()) {
+				return false;
+			}
+		}
+		return true;
+	}
+
+	public void printActivations() {
+		for (Node node: this.nodes) {
+			System.out.println(node.getActivation());
 		}
 	}
 }
