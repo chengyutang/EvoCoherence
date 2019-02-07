@@ -82,6 +82,11 @@ public class Node {
 		return netInput;
 	}
 
+	public double getWeight(Node node){
+       double wt = this.neighbors.get(node);
+       return wt;
+	}
+
 	public void computeNewActivation() {
 		double netInput = getNetInput();
 		Parameters parameters = new Parameters();
