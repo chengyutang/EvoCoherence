@@ -77,7 +77,7 @@ public class Node {
 	public double getNetInput() {
 		double netInput = 0;
 		for (Node neighbor: this.neighbors.keySet()) {
-			netInput += neighbor.getActivation() * this.neighbors.get(neighbor);
+			netInput += neighbor.getActivation() * this.neighbors.getWeight(neighbor);
 		}
 		return netInput;
 	}
