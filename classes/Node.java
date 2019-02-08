@@ -9,6 +9,7 @@ public class Node {
 	private double newActivation = 0;
 	private HashMap<Node, Double> neighbors;
 	private boolean settled = false;
+	double netInput = 0;
 
 	// Constructor, called when the activation value is not given.
 	public Node(String tag, String name) {
@@ -75,9 +76,16 @@ public class Node {
 	}
 
 	public double getNetInput() {
-		double netInput = 0;
+		double excitation = 0.0;
+		double inhibition = 0.0;
 		for (Node neighbor: this.neighbors.keySet()) {
-			netInput += neighbor.getActivation() * this.neighbors.getWeight(neighbor);
+			if(this.getWeight(neighbor)>0){
+            excitation+=neighbor.getActivation()*(this.getWeight(neighbor));
+			}
+			else{
+				inhibition+=neighbor.getActivation()*(this.getWeight(neighbor));
+			}
+			netInput += excitation+inhibition;
 		}
 		return netInput;
 	}
@@ -96,11 +104,21 @@ public class Node {
 			this.newActivation = this.activation * (1 - parameters.decay) + netInput * (this.activation - parameters.minimum);
 		}
 
-		this.newActivation = Math.max(this.newActivation, parameters.minimum);
+		/*this.newActivation = Math.max(this.newActivation, parameters.minimum);
 		this.newActivation = Math.min(this.newActivation, parameters.maximum);
+        */
+		if(this.newActivation > parameters.maximum){
+         this.newActivation = parameters.maximum;
+		}
+		if(this.newActivation < parameters.minimum){
+        this.newActivation = parameters.minimum;
+		}
 
 		if (Math.abs(this.newActivation - this.activation) < parameters.threshold) {
 			this.settled = true;
+		}
+		else{
+			this.settled = false;
 		}
 	}
 
