@@ -9,7 +9,7 @@ public class Node {
 	private double newActivation = 0;
 	private HashMap<Node, Double> neighbors;
 	private boolean settled = false;
-	double netInput = 0;
+
 
 	// Constructor, called when the activation value is not given.
 	public Node(String tag, String name) {
@@ -76,9 +76,10 @@ public class Node {
 	}
 
 	public double getNetInput() {
-		double excitation = 0.0;
-		double inhibition = 0.0;
+		double netInput = 0;
 		for (Node neighbor: this.neighbors.keySet()) {
+			double excitation = 0.0;
+			double inhibition = 0.0;
 			if(this.getWeight(neighbor)>0){
             excitation+=neighbor.getActivation()*(this.getWeight(neighbor));
 			}
