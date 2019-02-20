@@ -86,6 +86,10 @@ public class Node {
 		HashMap<String,Double> pairs= new HashMap<String,Double>();
 		Field[] f = weightParams.getClass().getDeclaredFields();
 		for(int i=0; i<f.length; i++){
+
+			//pairs.put(f[i].getName().toLowerCase(),f[i].getType());
+//			f[i].setAccessible(true);
+//			System.out.println(f[i].readDeclaredStaticField());
 			String fieldName = f[i].getName();
 			f[i].setAccessible(true);
 
@@ -120,9 +124,8 @@ public class Node {
 		}
 	}*/
 
-	public void addNeighbor(Node neighbor, String opinion, boolean directional) {
+	public void addNeighbor(Node neighbor, double weight, boolean directional) {
 		if (!this.neighbors.containsKey(neighbor)) {
-			Double weight =
 			this.neighbors.put(neighbor, weight);
 			if (directional) {
 				neighbor.addNeighbor(this, weight, true);
