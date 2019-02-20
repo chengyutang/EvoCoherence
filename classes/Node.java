@@ -1,5 +1,6 @@
 import java.util.HashMap;
 import java.lang.Math.*;
+import java.lang.reflect.Field;
 
 public class Node {
 	
@@ -9,6 +10,7 @@ public class Node {
 	private double newActivation = 0;
 	private HashMap<Node, Double> neighbors;
 	private boolean settled = false;
+	private String opinion;
 
 
 	// Constructor, called when the activation value is not given.
@@ -23,6 +25,13 @@ public class Node {
 		this.tag = tag;
 		this.name = name;
 		this.activation = activation;
+		this.neighbors = new HashMap<Node, Double>();
+	}
+
+	public Node(String tag, String name, String opinion) {
+		this.tag = tag;
+		this.name = name;
+		this.opinion = opinion;
 		this.neighbors = new HashMap<Node, Double>();
 	}
 
@@ -47,6 +56,7 @@ public class Node {
 		return this.settled;
 	}
 
+
 	public void setTag(String tag) {
 		this.tag = tag;
 	}
@@ -66,14 +76,60 @@ public class Node {
 		}
 	}
 
-	public void addNeighbor(Node neighbor, double weight, boolean directional) {
+	/*public double extractWeight(Node b){
+
+	}*/
+
+
+	public HashMap<String, Double> generateWeightList(){
+		WeightParameters weightParams  = new WeightParameters();
+		HashMap<String,Double> pairs= new HashMap<String,Double>();
+		Field[] f = weightParams.getClass().getDeclaredFields();
+		for(int i=0; i<f.length; i++){
+			String fieldName = f[i].getName();
+			f[i].setAccessible(true);
+
+			try {
+				Object newObj = f[i].get(weightParams.getClass());
+				String activ = String.valueOf(f[i].get(weightParams.getClass()));
+				Double act = Double.parseDouble(activ);
+				pairs.put(f[i].getName().toLowerCase(),act);
+
+			}catch (Exception e){
+				System.out.println(e);
+			}
+
+		}
+        return pairs;
+	}
+
+
+	public void getValue() {
+		HashMap<String, Double> pair = generateWeightList();
+		System.out.println(pair);
+	}
+
+
+
+	/*public void addNeighbor(Node neighbor, double weight, boolean directional) {
 		if (!this.neighbors.containsKey(neighbor)) {
 			this.neighbors.put(neighbor, weight);
 			if (directional) {
 				neighbor.addNeighbor(this, weight, true);
 			}
 		}
+	}*/
+
+	public void addNeighbor(Node neighbor, String opinion, boolean directional) {
+		if (!this.neighbors.containsKey(neighbor)) {
+			Double weight =
+			this.neighbors.put(neighbor, weight);
+			if (directional) {
+				neighbor.addNeighbor(this, weight, true);
+			}
+		}
 	}
+
 
 	public double getNetInput() {
 		double netInput = 0;
@@ -125,5 +181,12 @@ public class Node {
 
 	public void updateActivation() {
 		this.activation = this.newActivation;
+	}
+
+	public static void main(String[] args) throws NoSuchFieldException,
+			SecurityException, IllegalArgumentException, IllegalAccessException{
+		Node node = new Node("earth is spherical", "B1");
+		node.generateWeightList();
+		node.getValue();
 	}
 }
