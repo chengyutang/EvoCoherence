@@ -28,7 +28,7 @@ public class CoherenceNetwork {
 	public CoherenceNetwork() {
 		
 		// establish the connections
-		this.b1.addNeighbor(this.b2,0, this.b2.opinion, 1 );
+		this.b1.addNeighbor(this.b2, 0, 1);
 		/*this.b1.addNeighbor(this.b3,0,"agree", -1 );
 		this.b1.addNeighbor(this.b5,0, "disagree", -1);*/
 		/*this.b1.addNeighbor(this.b7,0, " " ,+1);

@@ -95,23 +95,23 @@ public class Node {
 
 
 
-	public void addNeighbor(Node neighbor, double weight,String opinion, int sign) {
+	public void addNeighbor(Node neighbor, double weight, int sign) {
 		HashMap<String, Double> weightList = neighbor.generateWeightList();
 		if (!this.neighbors.containsKey(neighbor)) {
 			weight =  generateWeight(neighbor, sign, weightList);
 			this.neighbors.put(neighbor, weight);
-			neighbor.addNeighbor(this, weight, this.opinion, sign);
+			neighbor.addNeighbor(this, weight, sign);
 		}
 	}
 
 	public double generateWeight(Node neighbor, int sign, HashMap<String,Double> weightList){
 		double weight = 0.0;
-            if (sign == 1) {
-                weight = 1 - (Math.abs(weightList.get(this.opinion) - weightList.get(neighbor.opinion)));
-            }
-            if (sign == -1) {
-                weight = -(Math.abs(weightList.get(this.opinion) - weightList.get(neighbor.opinion)));
-            }
+        if (sign == 1) {
+            weight = 1 - (Math.abs(weightList.get(this.opinion) - weightList.get(neighbor.opinion)));
+        }
+        if (sign == -1) {
+            weight = -(Math.abs(weightList.get(this.opinion) - weightList.get(neighbor.opinion)));
+        }
 		return weight;
 	}
 
@@ -123,14 +123,14 @@ public class Node {
 
 
 
-	public void addNeighbor(Node neighbor, double weight, boolean directional) {
-		if (!this.neighbors.containsKey(neighbor)) {
-			this.neighbors.put(neighbor, weight);
-			if (directional) {
-				neighbor.addNeighbor(this, weight, true);
-			}
-		}
-	}
+	// public void addNeighbor(Node neighbor, double weight, boolean directional) {
+	// 	if (!this.neighbors.containsKey(neighbor)) {
+	// 		this.neighbors.put(neighbor, weight);
+	// 		if (directional) {
+	// 			neighbor.addNeighbor(this, weight, true);
+	// 		}
+	// 	}
+	// }
 
 
 	public double getNetInput() {
