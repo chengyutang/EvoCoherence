@@ -93,8 +93,6 @@ public class Node {
 		return pairs;
 	}
 
-
-
 	public void addNeighbor(Node neighbor, double weight, int sign) {
 		HashMap<String, Double> weightList = neighbor.generateWeightList();
 		if (!this.neighbors.containsKey(neighbor)) {
@@ -114,7 +112,6 @@ public class Node {
         }
 		return weight;
 	}
-
 
 	public void getValue() {
 		HashMap<String, Double> pair = generateWeightList();
