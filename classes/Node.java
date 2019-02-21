@@ -10,7 +10,7 @@ public class Node {
 	private double newActivation = 0;
 	private HashMap<Node, Double> neighbors;
 	private boolean settled = false;
-	private String opinion;
+	public String opinion;
 
 
 	// Constructor, called when the activation value is not given.
@@ -21,10 +21,11 @@ public class Node {
 	}
 
 	// Constructor, called when the activation value is given.
-	public Node(String tag, String name, double activation) {
+	public Node(String tag, String name, double activation, String opinion) {
 		this.tag = tag;
 		this.name = name;
 		this.activation = activation;
+		this.opinion = opinion;
 		this.neighbors = new HashMap<Node, Double>();
 	}
 
@@ -69,27 +70,12 @@ public class Node {
 		this.activation = activation;
 	}
 
-	public void addNeighbor(Node neighbor, double weight) {
-		if (!this.neighbors.containsKey(neighbor)) {
-			this.neighbors.put(neighbor, weight);
-			neighbor.addNeighbor(this, weight);
-		}
-	}
-
-	/*public double extractWeight(Node b){
-
-	}*/
-
-
 	public HashMap<String, Double> generateWeightList(){
 		WeightParameters weightParams  = new WeightParameters();
 		HashMap<String,Double> pairs= new HashMap<String,Double>();
 		Field[] f = weightParams.getClass().getDeclaredFields();
 		for(int i=0; i<f.length; i++){
 
-			//pairs.put(f[i].getName().toLowerCase(),f[i].getType());
-//			f[i].setAccessible(true);
-//			System.out.println(f[i].readDeclaredStaticField());
 			String fieldName = f[i].getName();
 			f[i].setAccessible(true);
 
@@ -97,14 +83,36 @@ public class Node {
 				Object newObj = f[i].get(weightParams.getClass());
 				String activ = String.valueOf(f[i].get(weightParams.getClass()));
 				Double act = Double.parseDouble(activ);
-				pairs.put(f[i].getName().toLowerCase(),act);
+				pairs.put(fieldName,act);
 
 			}catch (Exception e){
 				System.out.println(e);
 			}
 
 		}
-        return pairs;
+		return pairs;
+	}
+
+
+
+	public void addNeighbor(Node neighbor, double weight,String opinion, int sign) {
+		HashMap<String, Double> weightList = neighbor.generateWeightList();
+		if (!this.neighbors.containsKey(neighbor)) {
+			weight =  generateWeight(neighbor, sign, weightList);
+			this.neighbors.put(neighbor, weight);
+			neighbor.addNeighbor(this, weight, this.opinion, sign);
+		}
+	}
+
+	public double generateWeight(Node neighbor, int sign, HashMap<String,Double> weightList){
+		double weight = 0.0;
+            if (sign == 1) {
+                weight = 1 - (Math.abs(weightList.get(this.opinion) - weightList.get(neighbor.opinion)));
+            }
+            if (sign == -1) {
+                weight = -(Math.abs(weightList.get(this.opinion) - weightList.get(neighbor.opinion)));
+            }
+		return weight;
 	}
 
 
@@ -114,15 +122,6 @@ public class Node {
 	}
 
 
-
-	/*public void addNeighbor(Node neighbor, double weight, boolean directional) {
-		if (!this.neighbors.containsKey(neighbor)) {
-			this.neighbors.put(neighbor, weight);
-			if (directional) {
-				neighbor.addNeighbor(this, weight, true);
-			}
-		}
-	}*/
 
 	public void addNeighbor(Node neighbor, double weight, boolean directional) {
 		if (!this.neighbors.containsKey(neighbor)) {
@@ -163,10 +162,6 @@ public class Node {
 		} else {
 			this.newActivation = this.activation * (1 - parameters.decay) + netInput * (this.activation - parameters.minimum);
 		}
-
-		/*this.newActivation = Math.max(this.newActivation, parameters.minimum);
-		this.newActivation = Math.min(this.newActivation, parameters.maximum);
-        */
 		if(this.newActivation > parameters.maximum){
          this.newActivation = parameters.maximum;
 		}
@@ -191,5 +186,6 @@ public class Node {
 		Node node = new Node("earth is spherical", "B1");
 		node.generateWeightList();
 		node.getValue();
+
 	}
 }
