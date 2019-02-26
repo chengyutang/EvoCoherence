@@ -1,34 +1,31 @@
 import java.util.*;
 import java.io.*;
+import java.lang.Math.*;
 
 public class CoherenceNetwork {
 
 	private Set<Node> visited = new HashSet<Node>();
-	// Create Belief/evidence nodes
-	public Node b1  = new Node("B1",  "The available data are unclear about whether evolution actually occurs.", 0.2, "agree");
-	public Node b2  = new Node("B2",  "Most scientists accept evolutionary theory to be scientifically valid.", 0.8, "somewhatAgree");
-	public Node b3  = new Node("B3",  "Organisms existing today are the result of evolutionary processes that have occurred over millions of years.", 0, "somewhatAgree");
-	public Node b4  = new Node("B4",  "The age of the earth is less than 20,000 yesrs.", 0, "neitherAgreeNorDisagree");
-	public Node b5  = new Node("B5",  "Human being on earth today are the result of evolutionary processes that have occurred over millions of years.", 0, "neitherAgreeNorDisagree");
-	public Node b6  = new Node("B6",  "The theory of evolution helps me appreciate characteristics and behaviors observed in living forms.", 0, "somewhatAgree");
-	public Node b7  = new Node("B7",  "The theory of evolution cannot be correct, since it disagrees with the accounts of creation in many religious texts.", 0, "agree");
-	public Node b8  = new Node("B8",  "Whether you accept evolutionary science should be a matter of what the evidence indicates.", 0, "agree");
-	public Node b9  = new Node("B9",  "People who accept that human beings are the result of evolutionary processes are very different from me.", 0, "somewhatAgree");
-	public Node b10 = new Node("B10", "Biology is important to me.", 0, "stronglyDisagree");
-	public Node b11 = new Node("B11", "Being good at biology will be useful to me in my future career.", 0, "stronglyDisagree");
-	public Node b12 = new Node("B12", "My biology abilities are important to my academic success.", 0, "stronglyDisagree");
-	public Node b13 = new Node("B13", "Doing well in biology is critical to my future success.", 0, "stronglyDisagree");
-	
-	//*******************************
-	// change later
-	public Node b14 = new Node("B14", "I consider myself a religious person.", 0, "agree");
-	public Node b15 = new Node("B15", "I consider myself a spiritual person.", 0, "agree");
-	public Node b16 = new Node("B16", "I'm a biology major.", 0, "stronglyAgree");
-	//*******************************
 
-	public List<Node> nodes = new ArrayList<Node>(Arrays.asList(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16));
+	public Node b1  = new Node("B1",  "The available data are unclear about whether evolution actually occurs.");
+	public Node b2  = new Node("B2",  "Most scientists accept evolutionary theory to be scientifically valid.");
+	public Node b3  = new Node("B3",  "Organisms existing today are the result of evolutionary processes that have occurred over millions of years.");
+	public Node b4  = new Node("B4",  "The age of the earth is less than 20,000 yesrs.");
+	public Node b5  = new Node("B5",  "Human being on earth today are the result of evolutionary processes that have occurred over millions of years.");
+	public Node b6  = new Node("B6",  "The theory of evolution helps me appreciate characteristics and behaviors observed in living forms.");
+	public Node b7  = new Node("B7",  "The theory of evolution cannot be correct, since it disagrees with the accounts of creation in many religious texts.");
+	public Node b8  = new Node("B8",  "Whether you accept evolutionary science should be a matter of what the evidence indicates.");
+	public Node b9  = new Node("B9",  "People who accept that human beings are the result of evolutionary processes are very different from me.");
+	public Node b10 = new Node("B10", "Biology is important to me.");
+	public Node b11 = new Node("B11", "Being good at biology will be useful to me in my future career.");
+	public Node b12 = new Node("B12", "My biology abilities are important to my academic success.");
+	public Node b13 = new Node("B13", "Doing well in biology is critical to my future success.");
+	public Node b14 = new Node("B14", "I consider myself a religious person.");
+	public Node b15 = new Node("B15", "I consider myself a spiritual person.");
+	public Node b16 = new Node("B16", "I'm a biology major.");
 
-	// Default constructor
+	// public List<Node> nodes = new ArrayList<Node>(Arrays.asList(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16));
+	public List<Node> nodeList = Arrays.asList(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16);
+
 	// Default constructor
 	public CoherenceNetwork() {
 		
@@ -58,37 +55,61 @@ public class CoherenceNetwork {
 
 	}
 
-	// Traversal the entire network and print tag of each node
-	public void traversal(Node start) {
-		this.visited.add(start);
-		System.out.println(start.getTag());
-		for (Node neighbor: start.getNeighbors().keySet()) {
-			if (!this.visited.contains(neighbor)) {
-				traversal(neighbor);
+	// Set activation values for all nodes in order given a list of activation values
+	public void setActivations(List<Double> activations) {
+		for (int i = 0; i < this.nodeList.size(); i++) {
+			this.nodeList.get(i).setActivation(activations.get(i));
+		}
+	}
+
+	public void calculateWeights() {
+		for (Node curNode: this.nodeList) {
+			for (Node neighbor: curNode.getNeighbors().keySet()) {
+				double weight = 0;
+				if (curNode.getSign(neighbor) == 1) {
+					weight =  1 - (Math.abs(curNode.getActivation() - neighbor.getActivation()));
+				} else {
+					weight = -1 * (Math.abs(curNode.getActivation() - neighbor.getActivation()));
+				}
+				curNode.setWeight(neighbor, weight);
 			}
 		}
 	}
 
+	// Traverse every node in the network using BFS and print their tags
+	public void nodeTraversal(Node start) {
+		this.visited.add(start);
+		System.out.println(start.getTag());
+		for (Node neighbor: start.getNeighbors().keySet()) {
+			if (!this.visited.contains(neighbor)) {
+				nodeTraversal(neighbor);
+			}
+		}
+		this.visited.clear();
+	}
+
 	public void runner() {
+		System.out.println("\nStart running...");
 		int cnt = 0;
 		while (!settled()) {
 			// if ((cnt % 1000) == 0) {
 			// 	System.out.printf("Iter %d\n", cnt);
 			// }
 			System.out.printf("Iter %d\n", cnt);
-			for (Node node: this.nodes) {
+			for (Node node: this.nodeList) {
 				node.computeNewActivation();
 			}
 
-			for (Node node: this.nodes) {
+			for (Node node: this.nodeList) {
 				node.updateActivation();
 			}
 			cnt += 1;
 		}
+		System.out.println("Finished.\n");
 	}
 
 	public boolean settled() {
-		for (Node node: this.nodes) {
+		for (Node node: this.nodeList) {
 			if (!node.settled()) {
 				return false;
 			}
@@ -97,7 +118,7 @@ public class CoherenceNetwork {
 	}
 
 	public void printActivations() {
-		for (Node node: this.nodes) {
+		for (Node node: this.nodeList) {
 			System.out.printf("%s: %f\n", node.getTag(), node.getActivation());
 		}
 	}
