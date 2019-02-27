@@ -23,7 +23,6 @@ public class CoherenceNetwork {
 	public Node b15 = new Node("B15", "I consider myself a spiritual person.");
 	public Node b16 = new Node("B16", "I'm a biology major.");
 
-	// public List<Node> nodes = new ArrayList<Node>(Arrays.asList(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16));
 	public List<Node> nodeList = Arrays.asList(b1, b2, b3, b4, b5, b6, b7, b8, b9, b10, b11, b12, b13, b14, b15, b16);
 
 	// Default constructor
@@ -62,6 +61,35 @@ public class CoherenceNetwork {
 		}
 	}
 
+	// Print the activation value of each node
+	public void printActivations() {
+		System.out.println("Activation values");
+		for (Node node: this.nodeList) {
+			System.out.printf("%s: %f\n", node.getTag(), node.getActivation());
+		}	
+	}
+
+	// find all edges and return them as a set of Edge objects
+	public Set<Edge> generateEdgeSet() {
+		Set<Edge> edgeSet = new HashSet<Edge>();
+		for (Node node: this.nodeList) {
+			for (Node neighbor: node.getNeighbors().keySet()) {
+				edgeSet.add(new Edge(node, neighbor, node.getWeight(neighbor)));
+			}
+		}
+		return edgeSet;
+	}
+
+	// Print the weight of each edge of the network in random order
+	public void printWeights() {
+		Set<Edge> edgeSet = generateEdgeSet();
+		System.out.printf("Number of edges: %d\n", edgeSet.size());
+		for (Edge edge: edgeSet) {
+			System.out.printf("%s %s: %f\n", edge.getA().getTag(), edge.getB().getTag(), edge.getWeight());
+		}
+	}
+
+	// Calculate the weight for each edge according to the activation values of its two ends and its nature/sign
 	public void calculateWeights() {
 		for (Node curNode: this.nodeList) {
 			for (Node neighbor: curNode.getNeighbors().keySet()) {
@@ -69,8 +97,9 @@ public class CoherenceNetwork {
 				if (curNode.getSign(neighbor) == 1) {
 					weight =  1 - (Math.abs(curNode.getActivation() - neighbor.getActivation()));
 				} else {
-					weight = -1 * (Math.abs(curNode.getActivation() - neighbor.getActivation()));
+					weight = - (Math.abs(curNode.getActivation() - neighbor.getActivation()));
 				}
+				// double weight =  (curNode.getSign(neighbor) + 1) / 2 - (Math.abs(curNode.getActivation() - neighbor.getActivation()));
 				curNode.setWeight(neighbor, weight);
 			}
 		}
@@ -108,6 +137,7 @@ public class CoherenceNetwork {
 		System.out.println("Finished.\n");
 	}
 
+	// Return True if all every nodes has settled, False otherwise
 	public boolean settled() {
 		for (Node node: this.nodeList) {
 			if (!node.settled()) {
@@ -115,31 +145,5 @@ public class CoherenceNetwork {
 			}
 		}
 		return true;
-	}
-
-	public void printActivations() {
-		for (Node node: this.nodeList) {
-			System.out.printf("%s: %f\n", node.getTag(), node.getActivation());
-		}	
-	}
-
-	public void printWeights() {
-		// Set<Set<Node>> edgeSet = generateEdgeSet();
-		Set<Edge> edgeSet = generateEdgeSet();
-		System.out.println(edgeSet.size());
-		for (Edge edge: edgeSet) {
-			// edge.ends.forEach(System.out::println);
-			System.out.printf("%s %s: %f\n", edge.a.getTag(), edge.b.getTag(), edge.getWeight());
-		}
-	}
-
-	public Set<Edge> generateEdgeSet() {
-		Set<Edge> edgeSet = new HashSet<Edge>();
-		for (Node node: this.nodeList) {
-			for (Node neighbor: node.getNeighbors().keySet()) {
-				edgeSet.add(new Edge(node, neighbor, node.getWeight(neighbor)));
-			}
-		}
-		return edgeSet;
 	}
 }

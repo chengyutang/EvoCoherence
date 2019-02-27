@@ -2,8 +2,8 @@ import java.util.*;
 
 public class Edge {
 
-	public Node a;
-	public Node b;
+	private Node a;
+	private Node b;
 	private Double weight;
 	// public Set<Node> twoEnds = new HashSet<Node>();
 
@@ -36,5 +36,13 @@ public class Edge {
 
 	public Double getWeight() {
 		return this.weight;
+	}
+
+	public Node getA() {
+		return this.a;
+	}
+
+	public Node getB() {
+		return this.b;
 	}
 }
