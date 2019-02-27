@@ -74,29 +74,6 @@ public class Node {
 		return this.settled;
 	}
 
-	public HashMap<String, Double> generateWeightList(){
-		WeightParameters weightParams  = new WeightParameters();
-		HashMap<String,Double> pairs= new HashMap<String,Double>();
-		Field[] f = weightParams.getClass().getDeclaredFields();
-		for(int i=0; i<f.length; i++){
-
-			String fieldName = f[i].getName();
-			f[i].setAccessible(true);
-
-			try {
-				Object newObj = f[i].get(weightParams.getClass());
-				String activ = String.valueOf(f[i].get(weightParams.getClass()));
-				Double act = Double.parseDouble(activ);
-				pairs.put(fieldName,act);
-
-			} catch (Exception e){
-				System.out.println(e);
-			}
-
-		}
-		return pairs;
-	}
-
 	public void addNeighbor(Node neighbor, double weight, int sign) {
 		// HashMap<String, Double> weightList = neighbor.generateWeightList();
 		if (!this.neighbors.containsKey(neighbor)) {
@@ -104,11 +81,6 @@ public class Node {
 			this.neighbors.put(neighbor, new WeightSign(weight, sign));
 			neighbor.addNeighbor(this, weight, sign);
 		}
-	}
-
-	public void getValue() {
-		HashMap<String, Double> pair = generateWeightList();
-		System.out.println(pair);
 	}
 
 	// public void addNeighbor(Node neighbor, double weight, boolean directional) {
@@ -159,13 +131,5 @@ public class Node {
 
 	public void updateActivation() {
 		this.activation = this.newActivation;
-	}
-
-	public static void main(String[] args) throws NoSuchFieldException,
-			SecurityException, IllegalArgumentException, IllegalAccessException{
-		Node node = new Node("earth is spherical", "B1");
-		node.generateWeightList();
-		node.getValue();
-
 	}
 }

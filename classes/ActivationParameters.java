@@ -1,4 +1,4 @@
-public class WeightParameters{
+public class ActivationParameters{
     public static double stronglyAgree = 1.0;
     public static double agree =  0.83;
     public static double somewhatAgree = 0.67;

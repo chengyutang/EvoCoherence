@@ -14,18 +14,18 @@ public class Main {
 		myNetwork.printActivations();
 	}
 
-	public static HashMap<String, Double> generateWeightList(){
-		WeightParameters weightParams  = new WeightParameters();
+	public static HashMap<String, Double> generateActivationMap(){
+		ActivationParameters activationParams  = new ActivationParameters();
 		HashMap<String,Double> pairs= new HashMap<String,Double>();
-		Field[] f = weightParams.getClass().getDeclaredFields();
+		Field[] f = activationParams.getClass().getDeclaredFields();
 		for(int i=0; i<f.length; i++){
 
 			String fieldName = f[i].getName();
 			f[i].setAccessible(true);
 
 			try {
-				Object newObj = f[i].get(weightParams.getClass());
-				String activ = String.valueOf(f[i].get(weightParams.getClass()));
+				Object newObj = f[i].get(activationParams.getClass());
+				String activ = String.valueOf(f[i].get(activationParams.getClass()));
 				Double act = Double.parseDouble(activ);
 				pairs.put(fieldName,act);
 
@@ -38,7 +38,7 @@ public class Main {
 	}
 
 	public static List<Double> generateActivationList(List<String> opinions) {
-		HashMap<String, Double> activationMap = generateWeightList();
+		HashMap<String, Double> activationMap = generateActivationMap();
 		List<Double> activationList = new ArrayList<>();
 		for (String op: opinions) {
 			activationList.add(activationMap.get(op));
