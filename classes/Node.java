@@ -10,8 +10,6 @@ public class Node {
 	private double newActivation = 0;
 	private HashMap<Node, WeightSign> neighbors;
 	private boolean settled = false;
-	// public String opinion;
-
 
 	// Constructor, called when the activation value is not given.
 	public Node(String tag, String name) {
@@ -108,17 +106,6 @@ public class Node {
 		}
 	}
 
-	// public double generateWeight(Node neighbor, int sign) { //, HashMap<String,Double> weightList){
-	// 	double weight = 0.0;
- //        if (sign == 1) {
- //            weight = 1 - (Math.abs(this.activation - neighbor.getActivation()));
- //        }
- //        if (sign == -1) {
- //            weight = -(Math.abs(this.activation - neighbor.getActivation()));
- //        }
-	// 	return weight;
-	// }
-
 	public void getValue() {
 		HashMap<String, Double> pair = generateWeightList();
 		System.out.println(pair);
@@ -147,8 +134,6 @@ public class Node {
 		}
 		return netInput;
 	}
-
-	
 
 	public void computeNewActivation() {
 		double netInput = getNetInput();

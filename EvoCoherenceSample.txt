@@ -1,0 +1,52 @@
+cogent Grade
+	@data
+	 var score: Int = 55;
+	@behavior
+		def giveScore():Unit={
+			if (score > 50) {
+				display("Give high score")
+			} else {
+				display("Give low score")
+			}
+		}
+	@cognitiveModel
+	  net X(inp:; outp:)
+	  [;]
+	    @percepts
+        @beliefs
+          belief(B1: "The available data are unclear about whether evolution actually occurs", 0.83)
+		  belief(B2: "Most scientists accept evolutionary theory to be scientifically valid", 0.67)
+		  belief(B3: "Organisms existing today are the result of evolutionary processes that have occurred over millions of years", 0.67)
+          belief(B4: "The age of the earth is less than 20,000 yesrs.", 0.4)
+	      belief(B5: "Human being on earth today are the result of evolutionary processes that have occurred over millions of years.", 0.4)
+	      belief(B6: "The theory of evolution helps me appreciate characteristics and behaviors observed in living forms.", 0.67)
+	      belief(B7: "The theory of evolution cannot be correct, since it disagrees with the accounts of creation in many religious texts.", 0.83)
+	      belief(B8: "Whether you accept evolutionary science should be a matter of what the evidence indicates.", 0.83)
+	      belief(B9: "People who accept that human beings are the result of evolutionary processes are very different from me.", 0.67)
+	      belief(B10: "Biology is important to me.", 0.0)
+	      belief(B11: "Being good at biology will be useful to me in my future career.", 0.0)
+	      belief(B12: "My biology abilities are important to my academic success.", 0.0)
+	      belief(B13: "Doing well in biology is critical to my future success.", 0.0)
+	      belief(B14: "I consider myself a religious person.", 0.83)
+	      belief(B15: "I consider myself a spiritual person.", 0.83)
+	      belief(B16: "I'm a biology major.", 1.0)
+        @explanations
+        @goals
+        @actions
+          action(HS:"Give high score", 0.5)
+        @constraints
+          B1 contradicts B3 at 0.16 B1 contradicts B2 at 0.16
+          B1 contradicts B5 at 0.43 B1 facilitates B7 at 1.0
+          B2 facilitates B8 at 0.84 B3 facilitates B5 at 0.73
+          B3 contradicts B4 at 0.27 B3 facilitates B6 at 1.0
+          B3 contradicts B9 at 0.0  B5 contradicts B4 at 0.0
+          B5 facilitates B6 at 0.73 B5 contradicts B9 at 0.27
+          B6 contradicts B7 at 0.16 B6 facilitates B10 at 0.33
+          B7 contradicts B10 at 0.83 B7 facilitates B14 at 1.0
+          B7 facilitates B15 at 1.0 B10 facilitates B16 at 0.0
+        @analogies
+	  endnet
+	@portmapping
+	@behaviormapping
+		X.HS mapsto giveScore
+endcogent
