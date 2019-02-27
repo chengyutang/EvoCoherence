@@ -120,6 +120,26 @@ public class CoherenceNetwork {
 	public void printActivations() {
 		for (Node node: this.nodeList) {
 			System.out.printf("%s: %f\n", node.getTag(), node.getActivation());
+		}	
+	}
+
+	public void printWeights() {
+		// Set<Set<Node>> edgeSet = generateEdgeSet();
+		Set<Edge> edgeSet = generateEdgeSet();
+		System.out.println(edgeSet.size());
+		for (Edge edge: edgeSet) {
+			// edge.ends.forEach(System.out::println);
+			System.out.printf("%s %s: %f\n", edge.a.getTag(), edge.b.getTag(), edge.getWeight());
 		}
+	}
+
+	public Set<Edge> generateEdgeSet() {
+		Set<Edge> edgeSet = new HashSet<Edge>();
+		for (Node node: this.nodeList) {
+			for (Node neighbor: node.getNeighbors().keySet()) {
+				edgeSet.add(new Edge(node, neighbor, node.getWeight(neighbor)));
+			}
+		}
+		return edgeSet;
 	}
 }
