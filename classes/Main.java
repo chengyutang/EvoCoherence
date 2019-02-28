@@ -13,13 +13,31 @@ public class Main {
 		// printWeights(myNetwork);
 		myNetwork.runner();
 		myNetwork.printActivations();
+
+		// test codes
+		// CoherenceNetwork myNetwork = new CoherenceNetwork("sampleXML.xml");
+		// myNetwork.printActivations();
+		// myNetwork.printWeights();
+		// myNetwork.calculateWeights();
+		// myNetwork.printWeights();
+		// myNetwork.runner();
+		// myNetwork.printActivations();
 	}
 
-	public static HashMap<String, Double> generateActivationMap(){
-		ActivationParameters activationParams  = new ActivationParameters();
-		HashMap<String,Double> pairs= new HashMap<String,Double>();
+	public static List<Double> prepareActivationList(List<String> opinions) {
+		HashMap<String, Double> activationMap = generateActivationMap();
+		List<Double> activationList = new ArrayList<>();
+		for (String op: opinions) {
+			activationList.add(activationMap.get(op));
+		}
+		return activationList;
+	}
+
+	public static HashMap<String, Double> generateActivationMap() {
+		ActivationParameters activationParams = new ActivationParameters();
+		HashMap<String,Double> pairs = new HashMap<String, Double>();
 		Field[] f = activationParams.getClass().getDeclaredFields();
-		for(int i=0; i<f.length; i++){
+		for(int i = 0; i < f.length; i++){
 
 			String fieldName = f[i].getName();
 			f[i].setAccessible(true);
@@ -36,15 +54,6 @@ public class Main {
 
 		}
 		return pairs;
-	}
-
-	public static List<Double> prepareActivationList(List<String> opinions) {
-		HashMap<String, Double> activationMap = generateActivationMap();
-		List<Double> activationList = new ArrayList<>();
-		for (String op: opinions) {
-			activationList.add(activationMap.get(op));
-		}
-		return activationList;
 	}
 
 	// public static void printWeights(CoherenceNetwork myNetwork) {

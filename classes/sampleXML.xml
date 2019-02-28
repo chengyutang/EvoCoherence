@@ -1,0 +1,40 @@
+<network>
+	<nodes>
+		<node>
+			<tag>B1</tag>
+			<text>text 1</text>
+			<activation>0.5</activation>
+		</node>
+		<node>
+			<tag>B2</tag>
+			<text>text 2</text>
+			<activation>0.2</activation>
+		</node>
+		<node>
+			<tag>B3</tag>
+			<text>text 3</text>
+			<activation>0.3</activation>
+		</node>
+	</nodes>
+
+	<connections>
+		<connection>
+			<end1>B1</end1>
+			<end2>B2</end2>
+			<weight>0.5</weight>
+			<sign>1</sign>
+		</connection>
+		<connection>
+			<end1>B1</end1>
+			<end2>B3</end2>
+			<weight>-0.2</weight>
+			<sign>-1</sign>
+		</connection>
+		<connection>
+			<end1>B2</end1>
+			<end2>B3</end2>
+			<weight>0.3</weight>
+			<sign>1</sign>
+		</connection>
+	</connections>
+</network>

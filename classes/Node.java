@@ -5,23 +5,23 @@ import java.lang.reflect.Field;
 public class Node {
 	
 	private String tag;
-	private String name;
+	private String text;
 	private double activation = 0;
 	private double newActivation = 0;
 	private HashMap<Node, WeightSign> neighbors;
 	private boolean settled = false;
 
 	// Constructor, called when the activation value is not given.
-	public Node(String tag, String name) {
+	public Node(String tag, String text) {
 		this.tag = tag;
-		this.name = name;
+		this.text = text;
 		this.neighbors = new HashMap<Node, WeightSign>();
 	}
 
 	// Constructor, called when the activation value is given.
-	public Node(String tag, String name, double activation) { //, String opinion) {
+	public Node(String tag, String text, double activation) { //, String opinion) {
 		this.tag = tag;
-		this.name = name;
+		this.text = text;
 		this.activation = activation;
 		// this.opinion = opinion;
 		this.neighbors = new HashMap<Node, WeightSign>(); // <nodeTage, WeightSign>
@@ -35,13 +35,13 @@ public class Node {
 		this.tag = tag;
 	}
 
-	// Return the name of the node
-	public String getName() {
-		return this.name;
+	// Return the text of the node
+	public String getText() {
+		return this.text;
 	}
 
-	public void setName(String name) {
-		this.name = name;
+	public void setText(String text) {
+		this.text = text;
 	}
 
 	public double getActivation() {

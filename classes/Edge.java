@@ -4,15 +4,13 @@ public class Edge {
 
 	private Node a;
 	private Node b;
-	private Double weight;
+	private WeightSign weightSign;
 	// public Set<Node> twoEnds = new HashSet<Node>();
 
-	public Edge(Node a, Node b, Double weight) {
-		// this.twoEnds.add(a);
-		// this.twoEnds.add(b);
+	public Edge(Node a, Node b, WeightSign weightSign) {
 		this.a = a;
 		this.b = b;
-		this.weight = weight;
+		this.weightSign = weightSign;
 	}
 
 	@Override
@@ -35,7 +33,19 @@ public class Edge {
 	}
 
 	public Double getWeight() {
-		return this.weight;
+		return this.weightSign.getWeight();
+	}
+
+	public void setWeight(double weight) {
+		this.weightSign.setWeight(weight);
+	}
+
+	public int getSign() {
+		return this.weightSign.getSign();
+	}
+
+	public void setSign(int sign) {
+		this.weightSign.setSign(sign);
 	}
 
 	public Node getA() {
