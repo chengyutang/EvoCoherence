@@ -74,6 +74,10 @@ public class Node {
 		return this.settled;
 	}
 
+	public void resetSettled() {
+		this.settled = false;
+	}
+
 	public void addNeighbor(Node neighbor, double weight, int sign) {
 		// HashMap<String, Double> weightList = neighbor.generateWeightList();
 		if (!this.neighbors.containsKey(neighbor)) {

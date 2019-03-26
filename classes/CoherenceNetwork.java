@@ -74,8 +74,8 @@ public class CoherenceNetwork {
 			NodeList xmlEdgeList = doc.getElementsByTagName("connection");
 			for (int i = 0; i < xmlEdgeList.getLength(); i++) {
 				Element curEdge = (Element) xmlEdgeList.item(i);
-				Node nodeA = findNode(curEdge.getElementsByTagName("end1").item(0).getTextContent());
-				Node nodeB = findNode(curEdge.getElementsByTagName("end2").item(0).getTextContent());
+				Node nodeA = getNode(curEdge.getElementsByTagName("end1").item(0).getTextContent());
+				Node nodeB = getNode(curEdge.getElementsByTagName("end2").item(0).getTextContent());
 				double weight = Double.parseDouble(curEdge.getElementsByTagName("weight").item(0).getTextContent());
 				int sign = Integer.parseInt(curEdge.getElementsByTagName("sign").item(0).getTextContent());
 				nodeA.addNeighbor(nodeB, weight, sign);
@@ -87,7 +87,7 @@ public class CoherenceNetwork {
 		
 	}
 
-	public Node findNode(String tag) {
+	public Node getNode(String tag) {
 		for (Node node: this.nodeList) {
 			if (node.getTag().equals(tag)) {
 				return node;
@@ -95,6 +95,22 @@ public class CoherenceNetwork {
 		}
 		System.out.printf("Node %s not found.\n", tag);
 		return null;
+	}
+
+	public void printNodeList() {
+		for (Node node: this.nodeList) {
+			System.out.printf("%s ", node.getTag());
+		}
+		System.out.printf("\n");
+	}
+
+	public void removeNode(int index) {
+		this.nodeList.remove(index - 1);
+		// printNodeList();
+		Node nodeToRemove = this.nodeList.get(index - 1);
+		for (Node neighbor: nodeToRemove.getNeighbors().keySet()) {
+			neighbor.getNeighbors().remove(nodeToRemove);
+		}
 	}
 
 	// Set activation values for all nodes in order given a list of activation values
@@ -138,9 +154,9 @@ public class CoherenceNetwork {
 			for (Node neighbor: curNode.getNeighbors().keySet()) {
 				double weight = 0;
 				if (curNode.getSign(neighbor) == 1) {
-					weight =  1 - (Math.abs(curNode.getActivation() - neighbor.getActivation()));
+					weight =  1 - (Math.abs(curNode.getActivation() - neighbor.getActivation())) / 2;
 				} else {
-					weight = - (Math.abs(curNode.getActivation() - neighbor.getActivation()));
+					weight = - (Math.abs(curNode.getActivation() - neighbor.getActivation())) / 2;
 				}
 				// double weight =  (curNode.getSign(neighbor) + 1) / 2 - (Math.abs(curNode.getActivation() - neighbor.getActivation()));
 				curNode.setWeight(neighbor, weight);
@@ -161,13 +177,13 @@ public class CoherenceNetwork {
 	}
 
 	public void runner() {
-		System.out.println("\nStart running...");
+		// System.out.println("\nStart running...");
 		int cnt = 0;
 		while (!settled()) {
 			// if ((cnt % 1000) == 0) {
 			// 	System.out.printf("Iter %d\n", cnt);
 			// }
-			System.out.printf("Iter %d\n", cnt);
+			// System.out.printf("Iter %d\n", cnt);
 			for (Node node: this.nodeList) {
 				node.computeNewActivation();
 			}
@@ -178,6 +194,7 @@ public class CoherenceNetwork {
 			cnt += 1;
 		}
 		System.out.println("Finished.\n");
+		resetSettled();
 	}
 
 	// Return True if all every nodes has settled, False otherwise
@@ -188,5 +205,11 @@ public class CoherenceNetwork {
 			}
 		}
 		return true;
+	}
+
+	public void resetSettled() {
+		for (Node node: this.nodeList) {
+			node.resetSettled();
+		}
 	}
 }

@@ -4,15 +4,15 @@ import java.lang.reflect.Field;
 
 public class Main {
 	public static void main(String[] args) {
-		CoherenceNetwork myNetwork = new CoherenceNetwork();
-		List<String> opinions = Arrays.asList("agree", "somewhatAgree", "somewhatAgree", "neitherAgreeNorDisagree", "neitherAgreeNorDisagree", "somewhatAgree", "agree", "agree", "somewhatAgree", "stronglyDisagree", "stronglyDisagree", "stronglyDisagree", "stronglyDisagree", "agree", "agree", "stronglyAgree");
-		myNetwork.setActivations(prepareActivationList(opinions));
-		myNetwork.printActivations();
-		myNetwork.calculateWeights();
-		myNetwork.printWeights();
-		// printWeights(myNetwork);
-		myNetwork.runner();
-		myNetwork.printActivations();
+		// CoherenceNetwork myNetwork = new CoherenceNetwork();
+		List<String> opinions = Arrays.asList("agree", "somewhatAgree", "stronglyDisagree", "neitherAgreeNorDisagree", "neitherAgreeNorDisagree", "somewhatAgree", "agree", "agree", "somewhatAgree", "stronglyDisagree", "stronglyDisagree", "stronglyDisagree", "stronglyDisagree", "agree", "agree", "stronglyAgree");
+		// myNetwork.setActivations(prepareActivationList(opinions));
+		// myNetwork.printActivations();
+		// myNetwork.calculateWeights();
+		// myNetwork.printWeights();
+		// // printWeights(myNetwork);
+		// myNetwork.runner();
+		// myNetwork.printActivations();
 
 		// test codes
 		// CoherenceNetwork myNetwork = new CoherenceNetwork("sampleXML.xml");
@@ -22,6 +22,54 @@ public class Main {
 		// myNetwork.printWeights();
 		// myNetwork.runner();
 		// myNetwork.printActivations();
+
+		// CoherenceNetwork myNetwork = new CoherenceNetwork();
+		// List<Double> activationPool = Arrays.asList(0.0, 0.17, 0.33, 0.4, 0.67, 0.83, 1.0);
+
+		// List<Double> finalActivations = new ArrayList<Double>();
+		// for (Double newActivation: activationPool) {
+		// 	System.out.println("-----------------------");
+		// 	myNetwork.setActivations(prepareActivationList(opinions));
+		// 	myNetwork.nodeList.get(1).setActivation(newActivation);
+		// 	// myNetwork.nodeList.get(9).setActivation(newActivation);
+		// 	// myNetwork.nodeList.get(13).setActivation(newActivation);
+		// 	// myNetwork.printActivations();
+		// 	myNetwork.calculateWeights();
+		// 	// myNetwork.printWeights();
+		// 	myNetwork.runner();
+		// 	// myNetwork.printActivations();
+		// 	// System.out.printf("Activation of label: %f\n\n", myNetwork.nodeList.get(6).getActivation());
+		// 	finalActivations.add(myNetwork.nodeList.get(6).getActivation());
+		// }
+
+		// for (Double acti: finalActivations) {
+		// 	System.out.printf("%f ", acti);
+		// }
+		// System.out.println();
+
+
+
+		CoherenceNetwork myNetwork = new CoherenceNetwork();
+		myNetwork.setActivations(prepareActivationList(opinions));
+		myNetwork.calculateWeights();
+		myNetwork.runner();
+		System.out.printf("%f\n\n", myNetwork.getNode("B7").getActivation());
+
+		int i = 1;
+		for (Node node: myNetwork.nodeList) {
+			if (i == 7) {
+				i++;
+				continue;
+			}
+			myNetwork = new CoherenceNetwork();
+			myNetwork.setActivations(prepareActivationList(opinions));
+			myNetwork.removeNode(i);
+			myNetwork.printNodeList();
+			myNetwork.calculateWeights();
+			myNetwork.runner();
+			System.out.printf("%f\n\n", myNetwork.getNode("B7").getActivation());
+			i++;
+		}
 	}
 
 	public static List<Double> prepareActivationList(List<String> opinions) {
